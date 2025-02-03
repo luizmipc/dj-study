@@ -1,0 +1,28 @@
+services:
+  web:
+    build: 
+      context: .
+    working_dir: /app
+    volumes:
+      - .:/app
+      - venv:/app/.venv
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          ignore:
+            - .venv/
+          
+        - action: rebuild
+          path: pyproject.toml
+        
+        - action: rebuild
+          path: uv.lock
+          
+    ports:
+      - "8000:8000"
+    env_file:
+    - .envrc.dev
+volumes:
+  venv: {}
